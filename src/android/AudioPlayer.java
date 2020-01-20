@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
+import android.os.Build;
 
 /**
  * This class implements the audio playback and recording capabilities used by Cordova.
@@ -135,22 +136,6 @@ public class AudioPlayer implements OnCompletionListener, OnPreparedListener, On
             }
             this.recorder.release();
             this.recorder = null;
-        }
-    }
-
-    /**
-     * Set the playback rate for the media
-     *
-     */
-    public void setRate(float speed) {
-        if (this.player != null) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                this.player.setPlaybackParams(this.player.getPlaybackParams().setSpeed(speed));
-            }
-        } else {
-            LOG.d(LOG_TAG, "AudioPlayer Error: Cannot set rate until the audio file is initialized.");
-            sendErrorStatus(MEDIA_ERR_NONE_ACTIVE);
         }
     }
 
@@ -346,6 +331,24 @@ public class AudioPlayer implements OnCompletionListener, OnPreparedListener, On
     //==========================================================================
     // Playback
     //==========================================================================
+
+    /**
+     * Set the playback rate for the media
+     *
+     */
+    public void setRate(float speed) {
+        if (this.player != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                LOG.d(LOG_TAG, "setPlaybackParams");
+                LOG.d(LOG_TAG, "setPlaybackParams: " + Build.VERSION.SDK_INT);
+                LOG.d(LOG_TAG, "setPlaybackParams: " + Build.VERSION_CODES.M);
+                this.player.setPlaybackParams(this.player.getPlaybackParams().setSpeed(speed));
+            }
+        } else {
+            LOG.d(LOG_TAG, "AudioPlayer Error: Cannot set rate until the audio file is initialized.");
+            sendErrorStatus(MEDIA_ERR_NONE_ACTIVE);
+        }
+    }
 
     /**
      * Start or resume playing audio file.
